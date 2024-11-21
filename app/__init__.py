@@ -1,16 +1,17 @@
 import os
-import json
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
-from flask_bootstrap import Bootstrap
-from app.forms import LoginForm, RegisterForm
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user, current_user, login_required, logout_user
-from app.db_models import db, User, Item, Ordered_item, Order
-from itsdangerous import URLSafeTimedSerializer
-from app.funcs import mail, send_confirmation_email, fulfill_order
+
 from dotenv import load_dotenv
+from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from app.admin.routes import admin
+from app.db_models import db, User, Item, Ordered_item, Order
+from app.forms import LoginForm, RegisterForm
+from app.funcs import mail, send_confirmation_email, fulfill_order
 
 load_dotenv()
 app = Flask(__name__)
@@ -60,7 +61,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         user = User.query.filter_by(email=email).first()
-        if user == None:
+        if user is None:
             flash(f'User with email {email} doesn\'t exist!<br> <a href={url_for("register")}>Register now!</a>',
                   'error')
             return redirect(url_for('login'))
@@ -97,6 +98,7 @@ def register():
         flash('Thanks for registering! You may login now.', 'success')
         return redirect(url_for('login'))
     return render_template("register.html", form=form)
+
 
 @app.route("/checkout", methods=["GET", "POST"])
 @login_required
