@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Orders - E-Commerce
+{% endblock %}
+
+{% block content %}
+	{% if payment_success %}
+		<div class="flash-success">
+			Your payment was successful! Thank you for your order.
+		</div>
+	{% endif %}
+	{% if not orders %}
+		<div class="flash-error">
+			You haven't placed any orders yet.<br>
+			<a href="{{ url_for('home') }}">Discover new items</a>
+		</div>
+	{% else %}
+    <table class="table table-striped">
+        <tr>
+            <th>Order id</th>
+            <th>Order date</th>
+			<th>Ordered items</th>
+			<th>Order status</th>
+        </tr>
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+			<td>
+				{% for i in order.items %}
+					{{ i.item.name }} x <span class="success">{{ i.quantity }}</span><br>
+				{% endfor %}
+			</td>
+			<td>{{ order.status }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+	{% endif %}
+{% endblock %}

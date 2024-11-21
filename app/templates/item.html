@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+	{{ item.name }} - E-Commerce
+{% endblock %}
+
+{% block content %}
+	{% with msgs =  get_flashed_messages(with_categories=True) %}
+	{% for c, msg in msgs %}
+		{% if c == 'error' %}
+			<div class="flash-error">
+                {{ msg | safe }}
+            </div>
+        {% else %}
+            <div class="success">
+                {{ msg | safe }}
+            </div>
+        {% endif %}
+        <br>
+	{% endfor %}
+	{% endwith %}
+
+	<div class="item-display">
+		<div class="img-wrapper">
+			<img src="{{ item.image }}" class="pic">
+		</div>
+		<b>{{ item.name }}</b>
+		<span class="right-item">&#x20B9;{{ item.price }}</span><br>
+
+        <div class="details">{{ item.details | safe }}</div>
+
+        <form action="{{ url_for('add_to_cart', id=item.id) }}" method="POST">
+            Quantity:
+            <input type="number" value="1" name="quantity" min="1" max="50" onkeyup="if(this.value > 50) this.value=50;" required>
+            <br><br>
+			<input type="submit" class="add-to-cart" value="Add to Cart" name="add">
+        </form>
+
+	</div>
+{% endblock %}
